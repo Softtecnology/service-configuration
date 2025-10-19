@@ -7,7 +7,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/users_db
     username: postgres
-    password: ${DB_PASSWORD}
+    password: G9vqSUukJ
     driver-class-name: org.postgresql.Driver
   # Hibernate JPA configuration
   jpa:
