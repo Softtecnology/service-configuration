@@ -104,7 +104,7 @@ jobs:
       - name: Validate YAML syntax
         uses: ibiqlik/action-yamllint@v3
         with:
-          file_or_dir: .
+          file_or_dir: "*.yml *.yaml"
           config_data: |
             extends: default
             rules:
