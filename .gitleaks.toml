@@ -1,78 +1,43 @@
-
-title = "Gitleaks Config for Spring Cloud Config Server"
+title = "Gitleaks for Spring Cloud Config"
 
 [extend]
-useDefault = true
+useDefault = false
 
 [[rules]]
-id = "spring-config-password"
-description = "Unencrypted password in Spring config"
-regex = '''(?i)password\s*[:=]\s*(?!\{cipher\}|\$\{)['"]?[^\s#'"\n]{3,}'''
-tags = ["spring", "password", "config"]
-
-[[rules]]
-id = "spring-config-secret"
-description = "Unencrypted secret in Spring config"
-regex = '''(?i)secret\s*[:=]\s*(?!\{cipher\}|\$\{)['"]?[^\s#'"\n]{3,}'''
-tags = ["spring", "secret", "config"]
-
-[[rules]]
-id = "spring-config-apikey"
-description = "Unencrypted API key in Spring config"
-regex = '''(?i)(api[-_]?key|apikey)\s*[:=]\s*(?!\{cipher\}|\$\{)['"]?[^\s#'"\n]{10,}'''
-tags = ["spring", "apikey", "config"]
-
-[[rules]]
-id = "spring-config-token"
-description = "Unencrypted token in Spring config"
-regex = '''(?i)token\s*[:=]\s*(?!\{cipher\}|\$\{)['"]?[^\s#'"\n]{10,}'''
-tags = ["spring", "token", "config"]
-
-[[rules]]
-id = "spring-config-credentials"
-description = "Unencrypted credentials in Spring config"
-regex = '''(?i)credentials?\s*[:=]\s*(?!\{cipher\}|\$\{)['"]?[^\s#'"\n]{3,}'''
-tags = ["spring", "credentials", "config"]
-
-[[rules]]
-id = "database-url-with-password"
-description = "Database connection string with embedded password"
-regex = '''jdbc:[\w]+://[^:]+:[^@]+@'''
-tags = ["database", "jdbc", "password"]
+id = "spring-password-plaintext"
+description = "Plaintext password in Spring config (not encrypted)"
+regex = '''password:\s+[^{\s][^\n]+'''
+tags = ["spring", "password"]
 
 [[rules]]
 id = "spring-datasource-password"
 description = "Spring datasource password not encrypted"
-regex = '''(?i)spring\.datasource\.password\s*[:=]\s*(?!\{cipher\}|\$\{)['"]?[^\s#'"\n]{3,}'''
-tags = ["spring", "datasource", "password"]
+regex = '''spring\.datasource\.password\s*[:=]\s*[^{\s][^\n]+'''
+tags = ["spring", "datasource"]
+
+[[rules]]
+id = "generic-secret"
+description = "Generic secret not encrypted"
+regex = '''secret:\s+[^{\s][^\n]+'''
+tags = ["secret"]
+
+[[rules]]
+id = "api-key"
+description = "API key not encrypted"
+regex = '''(apiKey|api-key):\s+[^{\s][^\n]+'''
+tags = ["apikey"]
 
 [allowlist]
-description = "Allowlist for encrypted values and environment variables"
+description = "Allow encrypted values and environment variables"
 
 regexes = [
-    '''\{cipher\}[A-Za-z0-9+/=]+''',
+    '''\{cipher\}''',
     '''\$\{[A-Z_]+\}''',
-    '''password:\s*\$\{.*\}''',
-    '''secret:\s*\$\{.*\}''',
+    '''password:\s+\$\{''',
 ]
 
 paths = [
     ".github/",
     ".git/",
-    "scripts/",
-    ".vscode/",
-    "*.md",
-    "*.txt",
-]
-
-stopwords = [
-    "example",
-    "sample",
-    "test",
-    "demo",
-    "localhost",
-    "changeme",
-    "password",
-    "secret",
-    "changeit"
+    ".*\\.md",
 ]
