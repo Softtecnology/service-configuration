@@ -1,0 +1,52 @@
+# .gitleaks.toml
+title = "Gitleaks for Spring Cloud Config"
+
+[extend]
+useDefault = false
+
+[[rules]]
+id = "spring-password-plaintext"
+description = "Plaintext password in Spring config (not encrypted)"
+regex = '''password:\s+[^{\s][^\n]+'''
+tags = ["spring", "password"]
+
+[[rules]]
+id = "spring-datasource-password"
+description = "Spring datasource password not encrypted"
+regex = '''spring\.datasource\.password\s*[:=]\s*[^{\s][^\n]+'''
+tags = ["spring", "datasource"]
+
+[[rules]]
+id = "generic-secret"
+description = "Generic secret not encrypted"
+regex = '''secret:\s+[^{\s][^\n]+'''
+tags = ["secret"]
+
+[[rules]]
+id = "api-key"
+description = "API key not encrypted"
+regex = '''(apiKey|api-key):\s+[^{\s][^\n]+'''
+tags = ["apikey"]
+
+[allowlist]
+description = "Allow encrypted values, environment variables, and result files"
+
+regexes = [
+    '''\{cipher\}''',
+    '''\$\{[A-Z_]+\}''',
+    '''password:\s+\$\{''',
+]
+
+paths = [
+    ".github/",
+    ".git/",
+    "scripts/",
+    ".vscode/",
+    "*.md",
+    "*.txt",
+    "*.log",
+    "results.json",
+    "results.sarif",
+    "gitleaks*",
+    "*.tar.gz",
+]

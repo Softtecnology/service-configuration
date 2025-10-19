@@ -52,4 +52,7 @@ build/
 hs_err_pid*
 replay_pid*
 
+*.tar.gz
+gitleaks
+
 # End of https://www.toptal.com/developers/gitignore/api/java
