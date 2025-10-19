@@ -118,11 +118,10 @@ jobs:
       - name: Run Gitleaks
         id: gitleaks
         run: |
-          # Descargar Gitleaks
           wget -q https://github.com/gitleaks/gitleaks/releases/download/v8.18.2/gitleaks_8.18.2_linux_x64.tar.gz
+          
           tar -xzf gitleaks_8.18.2_linux_x64.tar.gz
           
-          # Ejecutar con config personalizado
           ./gitleaks detect \
             --config .gitleaks.toml \
             --source . \
@@ -131,12 +130,10 @@ jobs:
             --verbose \
             --no-git || EXIT_CODE=$?
           
-          # Si encuentra secretos, falla
           if [ "${EXIT_CODE}" == "1" ]; then
             echo "::error::Gitleaks found secrets"
           fi
-          
-          # Convertir a SARIF para compatibilidad
+  
           if [ -f results.json ]; then
             ./gitleaks detect \
               --config .gitleaks.toml \
