@@ -39,5 +39,8 @@ regexes = [
 paths = [
     ".github/",
     ".git/",
-    ".*\\.md",
+    "*.md",
+    "results.json",
+    "results.sarif",
+    "gitleaks-report.*",
 ]
