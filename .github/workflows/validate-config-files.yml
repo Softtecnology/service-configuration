@@ -59,12 +59,10 @@ jobs:
       - name: Check all environments exist for each microservice
         run: |
           echo "## 🌍 Environment Coverage Check" >> $GITHUB_STEP_SUMMARY
-          
-          # Ambientes requeridos
+        
           REQUIRED_ENVS=("dev" "prod")
-          OPTIONAL_ENVS=("staging" "test")
-          
-          # Extraer microservicios únicos
+          OPTIONAL_ENVS=("qa")
+
           MICROSERVICES=$(ls ms-*.{yml,yaml,properties} 2>/dev/null | sed -E 's/ms-([a-z0-9-]+)-(dev|staging|prod|test|local)\..*/ms-\1/' | sort -u)
           
           MISSING_COUNT=0
@@ -115,10 +113,9 @@ jobs:
               document-start: disable
               truthy:
                 allowed-values: ['true', 'false']
-      - name: Scan for exposed secrets
-        uses: trufflesecurity/trufflehog@main
+      - name: Scan with detect-secrets
+        uses: reviewdog/action-detect-secrets@master
         with:
-          path: ./
-          base: ${{ github.event.repository.default_branch }}
-          head: HEAD
-          extra_args: --only-verified
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          fail_on_error: true
