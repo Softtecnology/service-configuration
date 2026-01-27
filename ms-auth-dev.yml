@@ -1,0 +1,44 @@
+server:
+  port: 9000
+  uri: http://127.0.0.1:9000
+  forward-headers-strategy: framework
+spring:
+  application:
+    name: ms-auth
+  datasource:
+    url: ${URL_DB}
+    username: ${USER_DB}
+    password: ${PASSWORD_DB}
+    driver-class-name: org.postgresql.Driver
+  # Configuración de Flyway para manejar BD existente
+  flyway:
+    baseline-on-migrate: true
+    baseline-version: 0
+    enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: create # Cambiado a update para que cree tablas si faltan
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+jwt:
+  secret-key: ${SECRET_KEY}
+  expiration-milliseconds: 1800000
+  refresh-token:
+    expiration-milliseconds: 604800000
+  kid: auth-service-key1
+  service-client:
+    secret: ${GATEWAY_CLIENT_SECRET}
+  callback:
+    uri: http://127.0.0.1:4200/login/oauth2/code/gateway-client
+  logout:
+    uri: http://127.0.0.1:4200/
+  gateway-client:
+    secret: ${GATEWAY_CLIENT_SECRET} # Secreto solicitado
+eureka:
+  client:
+    service-url:
+      defaultZone: ${DEFAULTZONE}
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true

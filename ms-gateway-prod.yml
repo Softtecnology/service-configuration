@@ -1,0 +1,56 @@
+server:
+  port: 8000
+spring:
+  application:
+    name: ms-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: ms-auth
+          uri: lb://ms-auth
+          predicates:
+            - Path=/api/v1/auth/**, /api/v1/roles/**
+          filters:
+            - TokenRelay
+
+        - id: ms-usuario
+          uri: lb://ms-usuario
+          predicates:
+            - Path=/api/v1/usuario/**
+          filters:
+            - RewritePath=/api/v1/usuario/(?<segment>.*), /api/v1/${segment}
+            - TokenRelay
+
+        - id: angular-frontend
+          uri: http://127.0.0.1:4200, http://localhost:4200
+          predicates:
+            - Path=/**
+
+  security:
+    oauth2:
+      client:
+        provider:
+          ms-auth-provider:
+            issuer-uri: ${ISSUER_URI}
+        registration:
+          gateway-client:
+            provider: ms-auth-provider
+            client-id: ${CLIENT_ID}
+            client-secret: ${CLIENT_SECRET}
+            authorization-grant-type: authorization_code
+            redirect-uri: ${REDIRECT_URI}
+            scope: openid, profile, read, write
+      resourceserver:
+        jwt:
+          issuer-uri: ${ISSUER_URI}
+eureka:
+  client:
+    service-url:
+      defaultZone: ${DEFAULTZONE}
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.security: DEBUG
