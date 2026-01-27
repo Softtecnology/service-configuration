@@ -5,9 +5,9 @@ spring:
   application:
     name: ms-usuario
   datasource:
-    url: jdbc:postgresql://aws-1-us-east-1.pooler.supabase.com:5432/postgres
-    username: postgres.srufosazfghvvsxodptq
-    password: i?CFYYJG+Qs-E45
+    url: jdbc:postgresql://urbedb.postgres.database.azure.com:5432/ms-usuario-db
+    username: UrbeDb
+    password: Inmo*2026*
     driver-class-name: org.postgresql.Driver
   # Hibernate JPA configuration
   jpa:
@@ -19,7 +19,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
 ### No tocar la configuracion de eureka ##
 eureka:
   client:
@@ -41,4 +40,3 @@ springdoc:
 logging:
   level:
     root: INFO
-    org.springframework.web: DEBUG
